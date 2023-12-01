@@ -1,0 +1,14 @@
+*.bbl
+*.aux
+*.blg
+*.log
+*.pdf
+*.out
+*.bak
+*.thm
+*.zip
+*.fdb_latexmk
+*.xcp
+*.fls
+*.synctex.gz
+data/supplementary_videos/*

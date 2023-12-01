@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Talking Head(?) Anime 4: Manual Poser Demo</title>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="css/main.css">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head>
+<body>
+<input type="hidden" id="pageName" value="main">
+<div id="loading">
+    <img id="loading-image" src="assets/ajax-loader.gif" alt="Loading..." />
+</div>
+<table cellpadding="5">
+    <tr>
+        <td valign="top">
+            <table cellpadding="5">
+                <tr>
+                    <td align="right">Eyebrows:</td>
+                    <td>
+                        <select name="eyebrowSelect" id="eyebrowSelector" style="width:200px;">
+                            <option value="eyebrow_troubled">eyebrow_troubled</option>
+                            <option value="eyebrow_angry">eyebrow_angry</option>
+                            <option value="eyebrow_lowered">eyebrow_lowered</option>
+                            <option value="eyebrow_raised">eyebrow_raised</option>
+                            <option value="eyebrow_happy">eyebrow_happy</option>
+                            <option value="eyebrow_serious">eyebrow_serious</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">Left:</td>
+                    <td><div id="eyebrowLeftSlider"></div></td>
+                </tr>
+                <tr>
+                    <td align="right">Right:</td>
+                    <td><div id="eyebrowRightSlider"></div></td>
+                </tr>
+                <tr>
+                    <td colspan="2"><hr></td>
+                </tr>
+
+                <tr>
+                    <td align="right">Eye:</td>
+                    <td>
+                        <select name="eyeSelect" id="eyeSelector" style="width:200px;">
+                            <option value="eye_wink">eye_wink</option>
+                            <option value="eye_happy_wink">eye_happy_wink</option>
+                            <option value="eye_surprised">eye_surprised</option>
+                            <option value="eye_relaxed">eye_relaxed</option>
+                            <option value="eye_unimpressed">eye_unimpressed</option>
+                            <option value="eye_raised_lower_eyelid">eye_raised_lower_eyelid</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">Left:</td>
+                    <td><div id="eyeLeftSlider"></div></td>
+                </tr>
+                <tr>
+                    <td align="right">Right:</td>
+                    <td><div id="eyeRightSlider"></div></td>
+                </tr>
+                <tr>
+                    <td colspan="2"><hr></td>
+                </tr>
+
+                <tr>
+                    <td align="right">Mouth:</td>
+                    <td>
+                        <select name="mouthSelect" id="mouthSelector" style="width:200px;">
+                            <option value="mouth_aaa">mouth_aaa</option>
+                            <option value="mouth_iii">mouth_iii</option>
+                            <option value="mouth_uuu">mouth_uuu</option>
+                            <option value="mouth_eee">mouth_eee</option>
+                            <option value="mouth_ooo">mouth_ooo</option>
+                            <option value="mouth_delta">mouth_delta</option>
+                            <option value="mouth_lowered_corner">mouth_lowered_corner</option>
+                            <option value="mouth_raised_corner">mouth_raised_corner</option>
+                            <option value="mouth_raised_smirk">mouth_raised_smirk</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">Left:</td>
+                    <td><div id="mouthLeftSlider"></div></td>
+                </tr>
+                <tr>
+                    <td align="right">Right:</td>
+                    <td><div id="mouthRightSlider"></div></td>
+                </tr>
+                <tr>
+                    <td colspan="2"><hr></td>
+                </tr>
+
+                <tr>
+                    <td colspan="2" align="center">Iris Shrinkage</td>
+                </tr>
+                <tr>
+                    <td align="right">Left:</td>
+                    <td><div id="irisSmallLeftSlider"></div></td>
+                </tr>
+                <tr>
+                    <td align="right">Right:</td>
+                    <td><div id="irisSmallRightSlider"></div></td>
+                </tr>
+                <tr>
+                    <td colspan="2"><hr></td>
+                </tr>
+
+                <tr>
+                    <td colspan="2" align="center">Iris Rotation</td>
+                </tr>
+                <tr>
+                    <td align="right">X:</td>
+                    <td><div id="irisXRotationSlider"></div></td>
+                </tr>
+                <tr>
+                    <td align="right">Y:</td>
+                    <td><div id="irisYRotationSlider"></div></td>
+                </tr>
+                <tr>
+                    <td colspan="2"><hr></td>
+                </tr>
+
+                <tr>
+                    <td colspan="2" align="center">Face Rotation</td>
+                </tr>
+                <tr>
+                    <td align="right">X rotation:</td>
+                    <td><div id="faceXRotationSlider"></div></td>
+                </tr>
+                <tr>
+                    <td align="right">Y Rotation:</td>
+                    <td><div id="faceYRotationSlider"></div></td>
+                </tr>
+                <tr>
+                    <td align="right">Z rotation:</td>
+                    <td><div id="faceZRotationSlider"></div></td>
+                </tr>
+
+                <tr>
+                    <td colspan="2" align="center">Body Rotation</td>
+                </tr>
+                <tr>
+                    <td align="right">Y rotation:</td>
+                    <td><div id="bodyYRotationSlider"></div></td>
+                </tr>
+                <tr>
+                    <td align="right">Z rotation:</td>
+                    <td><div id="bodyZRotationSlider"></div></td>
+                </tr>
+
+                <tr>
+                    <td colspan="2" align="center">Breathing</td>
+                </tr>
+                <tr>
+                    <td align="right">Breathing:</td>
+                    <td><div id="breathingSlider"></div></td>
+                </tr>
+            </table>
+        </td>
+        <td valign="top">
+            <table border="1">
+                <tr>
+                    <td>
+                        <canvas id="outputImage" width="512" height="512"></canvas>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" id="inferrenceTimeCell">&nbsp;</td>
+                </tr>
+                <tr>
+                    <td align="center">
+                        Character:
+                        <select name="characterSelect" id="characterSelector" style="width:200px;">
+                            <option value="lambda_chan" selected>Lambda-chan</option>
+                            <option value="lambda_san">Lambda-san</option>
+                            <option value="haru">Haru (Mikatsugi Arpeggio)</option>
+                            <option value="kisaragi_asato">Kisaragi Asato (Mikatsugi Arpeggio)</option>
+                            <option value="koakuma_mei">Koakuma Mei (Mikatsugi Arpeggio)</option>
+                            <option value="marietta">Marietta (Mikatsugi Arpeggio)</option>
+                            <option value="ponytail_girl">Ponytail Girl (Mikatsugi Arpeggio)</option>
+                            <option value="taoist_boy">Taoist Boy (Mikatsugi Arpeggio)</option>
+                            <option value="touhoku_itako">Touhoku Itako</option>
+                            <option value="touhoku_kiritan">Touhoku Kiritan</option>
+                            <option value="touhoku_zunko">Touhoku Zunko</option>
+                            <option value="yukiwarisou_no_majo">Yukiwarisou no Majo (Mikatsuki Arpeggio)</option>
+                            <option value="zundamon">Zundamon</option>
+                        </select>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
+<hr>
+
+<h1>Credits</h1>
+
+<p>In creating this demo, we use illustrations by 3rd party creators.</p>
+
+<p>We use three illustrations from <a href="https://zunko.jp/">東北ずん子・ずんだもんプロジェクト</a> by SSS LLC. They are:
+<ul>
+    <li>Touhoku Itako</li>
+    <li>Touhoku Zunko</li>
+    <li>Zundamon</li>
+</ul>
+The original illustrations be found with the <a href="https://emote.mtwo.co.jp/download/character/#zunko">E-mote models</a> distributed by M2, Inc. The terms of use for these illustrations can be found <a href="https://zunko.jp/guideline.html">here</a>. 
+</p>
+
+<p>We use 7 illustrations by <a href="https://roughsketch.en-grey.com/">Mikatsuki Arpeggio</a> (三日月アルペジオ). They are:
+<ul>
+    <li><a href="https://roughsketch.en-grey.com/Entry/81/">Haru (ハル)</a></li>
+    <li><a href="https://roughsketch.en-grey.com/Entry/119/">Kisaragi Asato (如月アサト)</a></li>
+    <li><a href="https://roughsketch.en-grey.com/Entry/82/">Koakuma Mei (小悪魔メイ)</a></li>    
+    <li><a href="https://roughsketch.en-grey.com/Entry/67/">Marietta (マリエッタ)</a></li>
+    <li><a href="https://roughsketch.en-grey.com/Entry/118/">Ponytail Girl (ポニーテール女子生徒)</a></li>
+    <li><a href="https://roughsketch.en-grey.com/Entry/110/">Taoist Boy (少年道士)</a></li>
+    <li><a href="https://roughsketch.en-grey.com/Entry/88/">Yukiwarisou no Majo (雪割草の魔女)</a></li>
+</ul>
+All the illustrations have been resized and cropped to the specification of our models. The terms of use for these illustrations can be found <a href="https://roughsketch.en-grey.com/Entry/99/">here</a>.
+</p>
+
+<p>We thank the creators for generously providing the illustrations for us to build upon.</p>
+
+<script src="index.bundle.js"></script>
+</body>
+</html>

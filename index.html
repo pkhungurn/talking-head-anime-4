@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Talking Head(?) Anime from a Single Image 4: Improve Model and Its Distillation</title>
+
+    <!-- Bootstrap -->
+    <link href="web/css/bootstrap.min.css" rel="stylesheet">
+    <link href="web/css/theme.css" rel="stylesheet">
+
+    <!-- MathJax -->
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']]
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
+    <script src="web/mathjax/tex-chtml.js" id="MathJax-script" async></script>
+    <script type="text/javascript" src="web/js/jquery-3.5.1.min.js"></script>
+    <script type="text/javascript" src="web/js/bigfoot.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="web/css/bigfoot-default.css">
+</head>
+
+<body>
+    <!--
+  	 <nav class="navbar navbar-expand-md navbar-light fixed-bottom bg-light">
+      <div class="collapse navbar-collapse justify-content-center" id="navbarCollapse">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="#">&nbsp; &nbsp; Top</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#abstract">Abstract</a>
+          </li>          
+          <li class="nav-item">
+            <a class="nav-link" href="#background">Background</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#overview">Overview</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#problem-spec">Problem Spec</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#data">Data</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#networks">Networks</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#results">Results</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#conclusion">Conclusion</a>
+          </li>
+        </ul>        
+      </div>
+    </nav>
+    -->
+
+    <div class="container" style="max-width: 640px;">
+        <span style="visibility: hidden;">
+            \(
+            \def\sc#1{\dosc#1\csod}
+            \def\dosc#1#2\csod{{\rm #1{\small #2}}}
+
+            \newcommand{\dee}{\mathrm{d}}
+            \newcommand{\Dee}{\mathrm{D}}
+            \newcommand{\In}{\mathrm{in}}
+            \newcommand{\Out}{\mathrm{out}}
+            \newcommand{\pdf}{\mathrm{pdf}}
+            \newcommand{\Cov}{\mathrm{Cov}}
+            \newcommand{\Var}{\mathrm{Var}}
+
+            \newcommand{\ve}[1]{\mathbf{#1}}
+            \newcommand{\mrm}[1]{\mathrm{#1}}
+            \newcommand{\ves}[1]{\boldsymbol{#1}}
+            \newcommand{\etal}{{et~al.}}
+            \newcommand{\sphere}{\mathbb{S}^2}
+            \newcommand{\modeint}{\mathcal{M}}
+            \newcommand{\azimint}{\mathcal{N}}
+            \newcommand{\ra}{\rightarrow}
+            \newcommand{\mcal}[1]{\mathcal{#1}}
+            \newcommand{\X}{\mathcal{X}}
+            \newcommand{\Y}{\mathcal{Y}}
+            \newcommand{\Z}{\mathcal{Z}}
+            \newcommand{\x}{\mathbf{x}}
+            \newcommand{\y}{\mathbf{y}}
+            \newcommand{\z}{\mathbf{z}}
+            \newcommand{\tr}{\mathrm{tr}}
+            \newcommand{\sgn}{\mathrm{sgn}}
+            \newcommand{\diag}{\mathrm{diag}}
+            \newcommand{\Real}{\mathbb{R}}
+            \newcommand{\sseq}{\subseteq}
+            \newcommand{\ov}[1]{\overline{#1}}
+            \DeclareMathOperator*{\argmax}{arg\,max}
+            \DeclareMathOperator*{\argmin}{arg\,min}
+            \)
+        </span>
+        <h1 align="center">&nbsp;</h1>
+        <h1 align="center">Talking Head(?) Anime<br>from a Single Image 4</h1>
+        <h2 align="center">Improved Model and Its Distillation</h2>
+        <h3>&nbsp;</h3>
+        <p align="center">
+            <a href="http://pkhungurn.github.io/">Pramook Khungurn</a><br>            
+        </p>
+        <h3 align="center">&nbsp;</h3>
+        <p align="center">
+            <a class="btn btn-primary" href="paper/paper.pdf">Paper</a>
+            <a class="btn btn-primary" href="https://arxiv.org/abs/2311.17409">arXiv</a>
+            <a class="btn btn-primary disabled" href="">Code (coming soon)</a>
+            <a class="btn btn-primary" href="supplementary/manual-poser-demo/index.html">Demo #1</a>
+            <a class="btn btn-primary" href="supplementary/webcam-demo/index.html">Demo #2</a>
+        </p>
+
+        <h1 align="center">&nbsp;</h1>
+    </div>
+
+    <div class="container" style="max-width: 1080px;">
+        <a name="eyecatcher"></a>
+        <div align="center">
+            <video id="eyecatcher" autoplay muted playsinline loop width="1080" style="border-width: 1px; border: solid">
+                <source src="web/videos/tha4-webcam-demo.mp4" type="video/mp4">
+            </video>
+            <br/>            
+        </div>
+        Using knowledge distillation <a href="#fn_hinton_2015">[Hinton et al. 2015]</a>, we can compress the movement of a specific character into a small (&lt; 2 MB) neural network model that can generate 512$\times$512 animation frames at real-time frame rates using consumer gaming GPUs. The model is so lightweight that it can run entirely in web browsers and still produce smooth animation.
+
+        <div class="footnotes">
+            <ul>
+                <li class="footnote" id="fn_hinton_2015">
+                    <p align="left">
+                        Geoffrey Hinton, Oriol Vinyals, and Jeffrey Dean.
+                        <b>Distilling the Knowledge in a Neural Network.</b>
+                        NIPS Deep Learning and Representation Learning Workshop 2015. 
+                        <a href="https://research.google/pubs/pub44873/">[LINK]</a>
+                    </p>                
+                </li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="container" style="max-width: 640px;">
+        <h1 align="center">&nbsp;</h1>
+
+        <h1>Abstract</h1>
+            
+        <p>We study the problem of creating a character model that can be controlled in real time from a single image of an anime character. A solution to this problem would greatly reduce the cost of creating avatars, computer games, and other interactive applications.</p>
+    
+        <p><a href="https://github.com/pkhungurn/talking-head-anime-3-demo">Talking Head Anime 3</a> (THA3) is an open source project that directly addresses the problem. It takes as input (1) an image of an anime character's upper body and (2) a $45$-dimensional pose vector and outputs a new image of the same character taking the specified pose. The range of possible movements is expressive enough for personal avatars and certain types of game characters. However, the system is too slow to generate animation in real time on common PCs, and its image quality can be improved.</p>        
+              
+        <p>In this paper, we improve THA3 in two ways. First, we propose new architectures for subnetworks that rotate the character's head and body based on U-Nets with attention <a href="#fn_ho_2020">[Ho et al. 2020]</a> that are widely used in modern generative models. The new architectures consistently yield better image quality than the baseline. Nevertheless, they also make the whole system much slower: it takes up to 150 milliseconds to generate a frame. Second, we propose a technique to distill the system into a small network (&lt; 2 MB) that can generate 512 $\times$ 512 animation frames in real-time ($\geq$ 30 FPS) using consumer gaming GPUs while keeping the image quality close to that of the full system. This improvement makes the whole system practical for real-time applications.</p>
+
+        <div class="footnotes">
+            <ul>
+                <li class="footnote" id="fn_ho_2020">
+                    <p align="left">
+                        Jonathan Ho, Ajay Jain, and Pieter Abbeel.
+                        <b>Denoising diffusion probabilistic models.</b>
+                        NeurIPS 2020. <a href="https://arxiv.org/abs/2006.11239">[LINK]</a>
+                    </p>                
+                </li>
+            </ul>
+        </div>
+
+        <h1>Method</h1>
+
+        <p>The THA systems, including the 4th version that we propose in this paper, is overly capable. At any time, we can change the chracter image and animate it immediately. However, our target use cases&mdash;virtual YouTubers (VTubers) and game characters&mdash;does not change their appearance every second and every minute to warrant this functionality. By creating neural networks that are specialized to a specific character image, we may obtain faster models that work under real-time constraints.</p>
+
+        <p>The faster models in question are created by knowledge distillation, the practice of training a machine learning model (the <b>student</b>) to mimic the behavior of another model (the <b>teacher</b>). In our case, the teacher model is the improved THA system. The student is a collection of two neural networks. The <b>face morpher</b> modifies the character's facial expression, and the <b>body rotator</b> rotates the face and the toros.</p>        
+    </div>    
+
+    <div class="container" style="max-width: 960px;">            
+        <br>
+        <a href="data/images/student-architecture.drawio.png">
+            <img src="data/images/student-architecture.drawio.png" alt="" width="960" style="border: solid; border-width: 1px; border-color: black;">
+        </a>
+        <center>The student model.</center>
+        <br>
+    </div>
+
+    <div class="container" style="max-width: 640px;">
+        <p>Architecture-wise, the face morpher is a SInusoidal REpresentation Network (SIREN) <a href="#fn_sitzmann_2020">[Sitzmann et al. 2020]</a>. The body morpher is also a SIREN but with two modifications. First, it generates images in a multi-resolution, starting with 128$\times$128, then 256$\times$256, and then 512$\times$512. This modification makes it fast enough to achieve real-time frame rates. Second, it uses image processing operations such as warping and alpha blending. This modification makes it preserve the details of the input character image better.</p>
+
+        <div class="footnotes">
+            <ul>
+                <li class="footnote" id="fn_sitzmann_2020">
+                    <p align="left">
+                        Vincent Sitzmann, Julien N. P. Martel, Alexander Bergman, David B. Lindell, and Gordon Wetzstein.
+                        <b>Implicit Neural Representations with Periodic Activation Functions.</b>
+                        NeurIPS 2020. <a href="https://arxiv.org/abs/2006.11239">[LINK]</a>
+                    </p>                
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="container" style="max-width: 1080px;">
+        <br>
+        <a href="data/images/student-face-morpher.drawio.png">
+            <img src="data/images/student-face-morpher.drawio.png" alt="" width="1080" style="border: solid; border-width: 1px; border-color: black;">
+        </a>
+        <center>The student face morpher.</center>
+        <br>
+
+        <a href="data/images/student-body-rotator.drawio.png">
+            <img src="data/images/student-body-rotator.drawio.png" alt="" width="1080" style="border: solid; border-width: 1px; border-color: black;">
+        </a>
+        <center>The student body morpher.</center>
+        <br>
+    </div>    
+
+    <div class="container" style="max-width: 640px;">
+        <p>Details such as how to train the student model and how it performs against the teacher are available in the <a href="paper/paper.pdf">paper</a>.</p>
+
+        <h1>Demos</h1>
+
+        <p>We provide two demo web applications.</p>
+
+        <ol>
+            <li>The <a href="supplementary/manual-poser-demo/index.html">manual poser demo</a> allows you to pose characters by manipulating UI widgets, mainly sliders.</li>
+
+            <li>The <a href="supplementary/webcam-demo/index.html">webcam demo</a> allows you to control characters with your own facial and bodily movement. This demo needs a web camera to function.</li>
+        </ol>
+
+        <p>The demos are best run on a computer with a dedicated gaming GPU. We were able to get real-time frame rates with an Nvidia GeForce 1080 Ti.</p>
+
+        <h1>Credits</h1>
+
+        <p>To create the demos, we use illustrations by 3rd party creators.</p>
+
+        <p>We use three illustrations from <a href="https://zunko.jp/">東北ずん子・ずんだもんプロジェクト</a> by SSS LLC. They are:
+        <ul>
+            <li>Touhoku Itako</li>
+            <li>Touhoku Zunko</li>
+            <li>Zundamon</li>
+        </ul>
+        The original illustrations be found with the <a href="https://emote.mtwo.co.jp/download/character/#zunko">E-mote models</a> distributed by M2, Inc. The terms of use for these illustrations can be found <a href="https://zunko.jp/guideline.html">here</a>. 
+        </p>
+
+        <p>We use 7 illustrations by <a href="https://roughsketch.en-grey.com/">Mikatsuki Arpeggio</a> (三日月アルペジオ). They are:
+        <ul>
+            <li><a href="https://roughsketch.en-grey.com/Entry/81/">Haru (ハル)</a></li>
+            <li><a href="https://roughsketch.en-grey.com/Entry/119/">Kisaragi Asato (如月アサト)</a></li>
+            <li><a href="https://roughsketch.en-grey.com/Entry/82/">Koakuma Mei (小悪魔メイ)</a></li>    
+            <li><a href="https://roughsketch.en-grey.com/Entry/67/">Marietta (マリエッタ)</a></li>
+            <li><a href="https://roughsketch.en-grey.com/Entry/118/">Ponytail Girl (ポニーテール女子生徒)</a></li>
+            <li><a href="https://roughsketch.en-grey.com/Entry/110/">Taoist Boy (少年道士)</a></li>
+            <li><a href="https://roughsketch.en-grey.com/Entry/88/">Yukiwarisou no Majo (雪割草の魔女)</a></li>
+        </ul>
+        All the illustrations have been resized and cropped to the specification of our models. The terms of use for these illustrations can be found <a href="https://roughsketch.en-grey.com/Entry/99/">here</a>.
+        </p>
+
+        <p>We thank the creators for generously providing the illustrations for us to build upon.</p>
+
+        <p>While the neural networks are developed with <a href="https://pytorch.org/">PyTorch</a>, the web demos use <a href="https://www.tensorflow.org/js">TensorFlow.js</a> with custom units we develop ourselve. We use <a href="https://developers.google.com/mediapipe/solutions/vision/face_landmarker">Mediapipe FaceLandmarker</a> to perform blendshape parameter estimation from webcam feed.</p>
+
+
+        <h1 align="center">&nbsp;</h1>        
+
+        <b>Update History</b>
+        <ul>
+            <li>2023/12/01: First publication.</li>
+        </ul>
+
+        <hr>
+        <p align="right">
+            <font size="1">Project <a href="https://en.wikipedia.org/wiki/Wisteria">Fuji</a></font>
+        </p>
+    </div>
+    <script src="web/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $.bigfoot();
+    </script>
+</body>
+
+</html>

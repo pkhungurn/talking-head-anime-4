@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Talking Head(?) Anime 4: Webcam Demo</title>
+    <link rel="stylesheet" href="css/jquery-ui.css">
+    <link rel="stylesheet" href="css/main.css">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">    
+</head>
+<body>
+<input type="hidden" id="pageName" value="main">
+<div id="loading">
+    <img id="loading-image" src="assets/ajax-loader.gif" alt="Loading..." />
+</div>
+<table>
+    <tr>
+        <td style="vertical-align: top">
+            <table border="1" cellpadding="5">
+                <tr>
+                    <td style="text-align: center">
+                        <b>Capture</b>
+                    </td>                    
+                </tr>
+                <tr>
+                    <td>
+                        <video id="video" style="display:none"></video>
+                        <canvas id="videoCanvas" width="640" height="480"></canvas>
+                    </td>
+                </tr>
+            </table>            
+        </td>
+        <td style="vertical-align: top; width: 256px;">
+            <table border="1" width="100%" cellpadding="5">
+                <tr>
+                    <td style="text-align: center;">
+                        <b>Control</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center;">
+                        <i>Eyebrow Down Mode</i><br>
+                        <select name="eyebrowDownModeSelector" id="eyebrowDownModeSelector" style="width:250px;">
+                            <option value="ANGRY" selected>ANGRY</option>
+                            <option value="TROUBLED">TROUBLED</option>
+                            <option value="SERIOUS">SERIOUS</option>
+                            <option value="LOWERED">LOWERED</option>
+                        </select>
+                    </td>
+                    
+                </tr>
+                <tr>
+                    <td style="text-align: center;">
+                        <i>Wink Mode</i><br>
+                        <select name="winkModeSelector" id="winkModeSelector" style="width:250px;">
+                            <option value="NORMAL" selected>NORMAL</option>
+                            <option value="RELAXED">RELAXED</option>                            
+                        </select>
+                    </td>
+                    
+                </tr>
+                <tr>
+                    <td style="text-align: center;">
+                        <i>Iris Size</i><br>
+                        <table width="100%" cellpadding="5">
+                            <tr>
+                                <td width="30" style="text-align: right;">Left:</td>
+                                <td><div id="irisSizeLeftSlider"></div></td>
+                            </tr>
+                            <tr>
+                                <td width="30" style="text-align: right;">Right:</td>
+                                <td><div id="irisSizeRightSlider"></div></td>
+                            </tr>
+                        </table>
+                        <br>                        
+                        <input type="checkbox" id="linkLeftRightIrisesCheckbox" checked> Use same values for both sizes
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center">
+                        <i>Breathing</i><br>
+                        <table cellpadding="5" width="100%">
+                            <tr>
+                                <td>
+                                    <input type="button" id="restartBreathingCycleButton" value="Restart Breathing Cycle" width="250"><br>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div id="breathingFrequencySlider"></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div id="breathingProgressBar"></div>
+                                </td>
+                            </tr>
+                        </table>                        
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center;">
+                        <i>Face Orientation</i><br>
+                        <input type="button" id="calibrateFaceOrientationButton" value="Calibrate (I'm looking straight)" width="250"><br>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center">
+                        <i>Conversion Parameters</i><br>
+                        <table cellpadding="2" width="100%">
+                            <tr>
+                                <td style="text-align: right; font-size: small;">Smile Threshold Min:</td>
+                                <td width="100px"><input id="smileThresholdMinSpinner"></td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: right; font-size: small;">Smile Threshold Max:</td>
+                                <td width="100px"><input id="smileThresholdMaxSpinner"></td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: right; font-size: small;">Eye Surprised Max:</td>
+                                <td width="100px"><input id="eyeSurprisedMaxSpinner"></td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: right; font-size: small;">Eye Blink Max:</td>
+                                <td width="100px"><input id="eyeBlinkMaxSpinner"></td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: right; font-size: small;">Eyebrow Down Max:</td>
+                                <td width="100px"><input id="eyebrowDownMaxSpinner"></td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: right; font-size: small;">Cheek Squint Min:</td>
+                                <td width="100px"><input id="cheekSquintMinSpinner"></td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: right; font-size: small;">Cheek Squint Max:</td>
+                                <td width="100px"><input id="cheekSquintMaxSpinner"></td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: right; font-size: small;">Jaw Open Min:</td>
+                                <td width="100px"><input id="jawOpenMinSpinner"></td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: right; font-size: small;">Jaw Open Max:</td>
+                                <td width="100px"><input id="jawOpenMaxSpinner"></td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: right; font-size: small;">Mouth Frown Max:</td>
+                                <td width="100px"><input id="mouthFrownMaxSpinner"></td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: right; font-size: small;">Mouth Funnel Min:</td>
+                                <td width="100px"><input id="mouthFunnelMinSpinner"></td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: right; font-size: small;">Mouth Funnel Max:</td>
+                                <td width="100px"><input id="mouthFunnelMaxSpinner"></td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </td>
+        <td style="vertical-align: top">
+            <table border="1" cellpadding="5">
+                <tr>
+                    <td style="text-align: center"><b>Character</b></td>
+                </tr>
+                <tr>
+                    <td>
+                        <canvas id="outputImage" width="512" height="512"></canvas>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center" id="inferrenceTimeCell">&nbsp;</td>
+                </tr>
+                <tr>
+                    <td style="text-align: center">
+                        Character:
+                        <select name="characterSelect" id="characterSelector" style="width:200px;">
+                            <option value="lambda_chan" selected>Lambda-chan</option>
+                            <option value="lambda_san">Lambda-san</option>
+                            <option value="haru">Haru (Mikatsugi Arpeggio)</option>
+                            <option value="kisaragi_asato">Kisaragi Asato (Mikatsugi Arpeggio)</option>
+                            <option value="koakuma_mei">Koakuma Mei (Mikatsugi Arpeggio)</option>
+                            <option value="marietta">Marietta (Mikatsugi Arpeggio)</option>
+                            <option value="ponytail_girl">Ponytail Girl (Mikatsugi Arpeggio)</option>
+                            <option value="taoist_boy">Taoist Boy (Mikatsugi Arpeggio)</option>
+                            <option value="touhoku_itako">Touhoku Itako</option>
+                            <option value="touhoku_kiritan">Touhoku Kiritan</option>
+                            <option value="touhoku_zunko">Touhoku Zunko</option>
+                            <option value="yukiwarisou_no_majo">Yukiwarisou no Majo (Mikatsuki Arpeggio)</option>
+                            <option value="zundamon">Zundamon</option>
+                        </select>                        
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
+<hr>
+
+<h1>Credits</h1>
+
+<p>In creating this demo, we use illustrations by 3rd party creators.</p>
+
+<p>We use three illustrations from <a href="https://zunko.jp/">東北ずん子・ずんだもんプロジェクト</a> by SSS LLC. They are:
+<ul>
+    <li>Touhoku Itako</li>
+    <li>Touhoku Zunko</li>
+    <li>Zundamon</li>
+</ul>
+The original illustrations be found with the <a href="https://emote.mtwo.co.jp/download/character/#zunko">E-mote models</a> distributed by M2, Inc. The terms of use for these illustrations can be found <a href="https://zunko.jp/guideline.html">here</a>. 
+</p>
+
+<p>We use 7 illustrations by <a href="https://roughsketch.en-grey.com/">Mikatsuki Arpeggio</a> (三日月アルペジオ). They are:
+<ul>
+    <li><a href="https://roughsketch.en-grey.com/Entry/81/">Haru (ハル)</a></li>
+    <li><a href="https://roughsketch.en-grey.com/Entry/119/">Kisaragi Asato (如月アサト)</a></li>
+    <li><a href="https://roughsketch.en-grey.com/Entry/82/">Koakuma Mei (小悪魔メイ)</a></li>    
+    <li><a href="https://roughsketch.en-grey.com/Entry/67/">Marietta (マリエッタ)</a></li>
+    <li><a href="https://roughsketch.en-grey.com/Entry/118/">Ponytail Girl (ポニーテール女子生徒)</a></li>
+    <li><a href="https://roughsketch.en-grey.com/Entry/110/">Taoist Boy (少年道士)</a></li>
+    <li><a href="https://roughsketch.en-grey.com/Entry/88/">Yukiwarisou no Majo (雪割草の魔女)</a></li>
+</ul>
+All the illustrations have been resized and cropped to the specification of our models. The terms of use for these illustrations can be found <a href="https://roughsketch.en-grey.com/Entry/99/">here</a>.
+</p>
+
+<p>We thank the creators for generously providing the illustrations for us to build upon.</p>
+
+
+<script src="index.bundle.js"></script>
+</body>
+</html>
