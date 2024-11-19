@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Talking Head(?) Anime from a Single Image 4: Improve Model and Its Distillation</title>
+    <title>Talking Head Anime 4: Distillation for Real-Time Performance</title>
 
     <!-- Bootstrap -->
     <link href="web/css/bootstrap.min.css" rel="stylesheet">
@@ -106,8 +106,9 @@
             \)
         </span>
         <h1 align="center">&nbsp;</h1>
-        <h1 align="center">Talking Head(?) Anime<br>from a Single Image 4</h1>
-        <h2 align="center">Improved Model and Its Distillation</h2>
+        <h1 align="center">Talking Head Anime 4:</h1>
+        <h2 align="center">Distillation for Real-Time Performance</h2>
+        <h2 align="center"><a href="https://wacv2025.thecvf.com/">WACV 2025</a></h2>
         <h3>&nbsp;</h3>
         <p align="center">
             <a href="http://pkhungurn.github.io/">Pramook Khungurn</a><br>            
@@ -152,24 +153,12 @@
         <h1 align="center">&nbsp;</h1>
 
         <h1>Abstract</h1>
-            
-        <p>We study the problem of creating a character model that can be controlled in real time from a single image of an anime character. A solution to this problem would greatly reduce the cost of creating avatars, computer games, and other interactive applications.</p>
-    
-        <p><a href="https://github.com/pkhungurn/talking-head-anime-3-demo">Talking Head Anime 3</a> (THA3) is an open source project that directly addresses the problem. It takes as input (1) an image of an anime character's upper body and (2) a $45$-dimensional pose vector and outputs a new image of the same character taking the specified pose. The range of possible movements is expressive enough for personal avatars and certain types of game characters. However, the system is too slow to generate animation in real time on common PCs, and its image quality can be improved.</p>        
-              
-        <p>In this paper, we improve THA3 in two ways. First, we propose new architectures for subnetworks that rotate the character's head and body based on U-Nets with attention <a href="#fn_ho_2020">[Ho et al. 2020]</a> that are widely used in modern generative models. The new architectures consistently yield better image quality than the baseline. Nevertheless, they also make the whole system much slower: it takes up to 150 milliseconds to generate a frame. Second, we propose a technique to distill the system into a small network (&lt; 2 MB) that can generate 512 $\times$ 512 animation frames in real-time ($\geq$ 30 FPS) using consumer gaming GPUs while keeping the image quality close to that of the full system. This improvement makes the whole system practical for real-time applications.</p>
 
-        <div class="footnotes">
-            <ul>
-                <li class="footnote" id="fn_ho_2020">
-                    <p align="left">
-                        Jonathan Ho, Ajay Jain, and Pieter Abbeel.
-                        <b>Denoising diffusion probabilistic models.</b>
-                        NeurIPS 2020. <a href="https://arxiv.org/abs/2006.11239">[LINK]</a>
-                    </p>                
-                </li>
-            </ul>
-        </div>
+        <p>We study the problem of creating a character model that can be controlled in real time from a single image of an anime character. A solution would greatly reduce the cost of creating avatars, computer games, and other interactive applications.</p>
+
+        <p><a href="https://github.com/pkhungurn/talking-head-anime-3-demo">Talking Head Anime 3</a> (THA3) is an open source project that attempts to directly address the problem. It takes as input (1) an image of an anime character's upper body and (2) a $45$-dimensional pose vector and outputs a new image of the same character taking the specified pose. The range of possible movements is expressive enough for personal avatars and certain types of game characters. </p>
+
+        <p>THA3's main limitation is its speed. It can achieve interactive frame rates ($\approx$ 20 FPS) only if it is run on a very powerful GPU (Nvidia Titan RTX or better). Based on the insight that avatars and game characters do not need to change their appearance every so often, we propose a technique to distill the system into a small student neural network (&lt; 2 MB) specific to a particular character. The student model can generate $512\times512$ animation frames in real time ($\geq$ 30 FPS) using consumer gaming GPUs while preserving the image quality of the teacher model. For the first time, our technique makes the whole system practical for real-time applications.</p>                        
 
         <h1>Method</h1>
 
@@ -232,6 +221,10 @@
         </ol>
 
         <p>The demos are best run on a computer with a dedicated gaming GPU. We were able to get real-time frame rates with an Nvidia GeForce 1080 Ti.</p>
+
+        <h1>Supplementary Material</h1>
+
+        <p>The supplementary material for the paper is available in <a href="supplementary/index.html">this web page.</a></p>
 
         <h1>Credits</h1>
 
